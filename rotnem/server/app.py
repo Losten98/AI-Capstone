@@ -9,7 +9,7 @@ import os
 import datetime
 
 import numpy as np
-from PIL import Image
+
 
 app = Flask(__name__)
 app.secret_key = 'sogang_nice'
