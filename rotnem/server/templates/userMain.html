@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>HIT Main</title>
+  <style type="text/css">
+    .hidden_menu{
+      display: none;
+    }
+  </style>
+  
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-8">
+        <div class="card w-100">
+          <div class="card bg-dark text-white text-center">
+            <img class="card-img" src="/static/images/project_h_base.png" alt="Card image">
+            <div class="card-img-overlay">
+              <br></dr><br></dr><br></dr><br></dr>
+              <h5 class="card-text ml-5">Welcome {{data.user}}. Enjoy your brain.</h5>
+              <br></dr><br></dr><br></dr><br></dr>
+
+              <h2 class="card-text ml-5">Device {{data.status}}.</h2>
+              <!--<meta http-equiv="refresh" content="2;url=/userMain">-->
+              <br></dr><br></dr>
+              <h2 class="card-text ml-5">Push Start Button on device.</h2>
+              <br></dr><br></dr><br></dr><br></dr><br></dr><br></dr>
+              <div>
+                 {% for time in data.timedb %}
+                      <h5><a href="/dataShow/{{data.user}}/{{time[0]}}">Analysis 	&#60; {{time[1]}} 	&#62; </a></h5>
+                  {% endfor %}
+              </div>
+              <br></dr><br></dr>
+              <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+              <script>
+                (function() {
+                  var status = $('.status'),
+                    poll = function() {
+                      $.ajax({
+                        url: '/dbcheck',
+                        dataType: 'json',
+                        type: 'get',
+                        success: function(data) { // check if available
+                          console.log(data.status)
+                          if ( data.status == 'record' ) { // get and check data value
+                            console.log(data.status)
+                            //clearInterval(pollInterval); // optional: stop poll function
+                            location.replace('/dataRcv');
+                          }
+                        },
+                        error: function() { // error logging
+                          console.log('Error!');
+                        }
+                      });
+                    },
+                    pollInterval = setInterval(function() { // run function every 2000 ms
+                      poll();
+                      }, 2000);
+                    poll(); // also run function on init
+                })();
+              </script>
+              <p class="small">Copy right. All right reseved.</p></a>
+              <a href="/logout">Logout</a>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script type = "text/javascript"
+  function creatorButton() {
+    var x=document.getElementById("creatorMenu");
+    if (window.getComputedStyle(x).display === "none"){
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  </script> -->
+  <script>
+      hitSession = window.sessionStorage;
+      hitSession.setItem("username", "{{data.user}}");
+      console.log(hitSession.getItem("username"));
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Miya</title>
+  <script src="/static/js/signUp.js"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-8">
+        <div class="card w-100">
+          <div class="card bg-dark text-white text-center">
+            <img class="card-img" src="/static/images/project_h_base.png" alt="Card image">
+            <div class="card-img-overlay">
+              <br></dr><br></dr><br></dr><br></dr><br></dr><br></dr>
+              <h5 class="mt-2">Error Message from server.</h5>
+              <br></dr><br></dr>
+                <h1>{{error}}</h1>        
+              <a href="/" class="text-center"><p class="small">Back to Entry.</p></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

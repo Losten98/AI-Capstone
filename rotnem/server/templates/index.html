@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>HIT Entry</title>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-8">
+        <div class="card w-100">
+          <div class="card bg-dark text-white text-center">
+            <img class="card-img" src="/static/images/project_h.png" alt="Card image">
+            <div class="card-img-overlay">
+              <h5 class="card-text">Login to your brain.</h5>
+            </div>
+            <div class="row justify-content-center mt-3">
+              <div class="card border-dark text-white bg-dark" >
+                <div class="card-body">
+                  <form class="form-signin" action="/validateLogin" method="post">
+                    <div class="form-group">
+                      <div class="invalid-feedback d-block text-center">
+                        <label for="inputUser" class="sr-only">User Name</label>
+                        <input type="text" name="inputUser" id="inputUser" class="form-control" placeholder="User Name" required autofocus>
+                      </div>
+                    </div>
+                    <input type="submit" value="signin" class="form-control btn btn-primary">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

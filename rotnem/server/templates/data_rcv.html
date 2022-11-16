@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>HIT recv</title>
+  <style type="text/css">
+    .hidden_menu{
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-8">
+        <div class="card w-100">
+          <div class="card bg-dark text-white text-center">
+            <img class="card-img" src="/static/images/project_h_base.png" alt="Card image">
+            <div class="card-img-overlay">
+              <br></dr><br></dr><br></dr><br></dr>
+              <h5 class="card-text ml-5">Welcome {{data.user}}. Enjoy your brain.</h5>
+              <br></dr><br></dr><br></dr><br></dr>
+
+              <div>
+                <h1>fNIRS recording started.</h1>
+                <br></dr><br></dr>
+                <div id="container">
+                  <div id="main">
+                    <div id="main-title">
+                      <h3>User Name: {{data.user}}</h3>
+  
+                      <h1>Time reamin : <div id='timer'></div></h1>
+                    </div>
+                    <!--<div class="progress">
+                      <div id="progress-bar" class="progress-bar  progress-bar-striped" role="progressbar" style="width:{{progress}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{progress}}%</div>
+                     </div>-->
+                  </div>
+                </div>
+              </div>   
+              <br></dr><br></dr><br></dr>
+              <br></dr><br></dr><br></dr><br></dr><br></dr><br></dr>
+            <p class="small">Copy right. All right reseved.</p></a>
+            <a href="/logout">Logout</a>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script>
+              (function() {
+                var status = $('.status'),
+                  poll = function() {
+                    $.ajax({
+                      url: '/dbcheck',
+                      dataType: 'json',
+                      type: 'get',
+                      success: function(data) { // check if available
+                        console.log(data.status)
+                        if ( data.status != 'record' ) { // get and check data value
+                          console.log(data.status)
+                          //clearInterval(pollInterval); // optional: stop poll function
+                          location.replace('/dataResult');
+                        }
+                      },
+                      error: function() { // error logging
+                        console.log('Error!');
+                      }
+                    });
+                  },
+                  pollInterval = setInterval(function() { // run function every 2000 ms
+                    poll();
+                    }, 2000);
+                  poll(); // also run function on init
+              })();
+            </script>
+            <script>
+              // var progress = 100;
+              // var bar = document.getElementById("progress-bar");
+              // function updateProgress(progressBarElement, progress) {
+              //   if ( {{progress}} < 0 ){
+              //     progressBarElement.style.color = red;
+              //     progressBarElement.style.width = "94%";
+              //   } else {
+              //     progressBarElement.style.width = progress.percent + "%";
+              //   }
+              // }
+              // for (var i = 0; i < 16; i++) {
+              //     setTimeout(updateProgress, 500 * i, bar, {
+              //       percent: {{progress}} + i
+              //     })
+              //   }
+
+              var time = 300; 
+                var x = setInterval(function() {
+                document.getElementById("timer").innerHTML = time + "sec";
+                time--;
+                if (time < 0) {
+                  clearInterval(x);
+                  document.getElementById("timer").innerHTML = "Time expired";
+                }
+              }, 1000);
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

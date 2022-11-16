@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>HIT result</title>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-8">
+        <div class="card w-100">
+          <div class="card bg-dark text-white text-center">
+            <img class="card-img" src="/static/images/project_h_base.png" alt="Card image">
+            <div class="card-img-overlay">
+              <br></dr><br></dr><br></dr><br></dr>
+              <h5 class="card-text ml-5">Welcome {{data.user}}. Enjoy your brain.</h5>
+              <br></dr><br></dr><br></dr><br></dr>
+
+              <div>
+                <h1>fNIRS result show now.</h1>
+                <br></dr><br></dr>
+                <div id="container">
+                  <div id="main">
+                    <div id="main-title">
+                      <h3>User Name: {{data.user}}</h3><br></br>
+                      <h1>Your Brain: {{data.judge}}</h1>
+
+                      <h5>Data : {{data.sensorData}}</h5>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a href="/userMain">Back to Main</a>
+              <br></dr><br></dr><br></dr>
+              <br></dr><br></dr><br></dr><br></dr><br></dr><br></dr>
+            <p class="small">Copy right. All right reseved.</p></a>
+            <a href="/logout">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
