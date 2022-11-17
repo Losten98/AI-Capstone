@@ -94,7 +94,7 @@ while True:
         predict_x_data = []
 
         for i in range(len(red)):
-            predict_x_data.append([red[i], ir[i]])
+            predict_x_data.append([ir[i], red[i]])
 
         classifier = joblib.load('classifier.joblib')
         y_pred= classifier.predict(predict_x_data)
