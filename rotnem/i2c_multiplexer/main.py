@@ -102,7 +102,7 @@ while True:
 
         judge_criteria = sum(y_pred) / len(predict_x_data)
 
-        if judge_criteria > 0.8:
+        if judge_criteria > 0.9:
             judge = 'rest required.'
         else:
             judge = 'calm and peace.'
