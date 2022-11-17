@@ -175,7 +175,7 @@ def sensorDataRcv():
             device = data['device']
             judge = data['judge']
             print('device name:', device)
-            sensor_db[device].append(data['sensor'])
+            sensor_db[device].append([data['spo2'], data['hr']])
             judge_db[device].append(judge)
             time_db[device].append([len(time_db[device]),now_str])
             print(time_db[device][-1], sensor_db[device][-1])

@@ -88,6 +88,28 @@ while True:
         red = red1_buf + red2_buf
         ir = ir1_buf + ir2_buf
 
+        ##### ------ Add ML or TF predict result with sensor data                ---- ####
+        ##### ------ Use red1_buf, red2_buf, ir1_buf, ir2_buf, hr_buf, spo2_buf  ---- ####
+
+        predict_x_data = []
+
+        for i in range(len(red)):
+            predict_x_data.append([red[i], ir[i]])
+
+        classifier = joblib.load('classifier.joblib')
+        y_pred= classifier.predict(predict_x_data)
+        print(y_pred)
+
+        judge_criteria = sum(y_pred) / len(predict_x_data)
+
+        if judge_criteria > 0.8:
+            judge = 'rest required.'
+        else:
+            judge = 'calm and peace.'
+
+        print(f"final judge from ML - sum: {sum(y_pred)} criteria:{judge_criteria} judge: {judge})")
+        ##### ----------------------------------------------------------------------- ####
+
         hr_buf = []
         spo2_buf = []
         print(len(red))
@@ -101,16 +123,6 @@ while True:
             for i in range(50):
                 f.write(f"{i},{hr_buf[i]},{spo2_buf[i]}\n")
             f.close()
-
-        ##### ------ Add ML or TF predict result with sensor data                ---- ####
-        ##### ------ Use red1_buf, red2_buf, ir1_buf, ir2_buf, hr_buf, spo2_buf  ---- ####
-
-        if sum(spo2_buf) > 0:
-            judge = 'calm and peace.'
-        else:
-            judge = 'rest required.'
-
-        ##### ----------------------------------------------------------------------- ####
 
         # Send Sensor data with wraping json format
         result = requests.post('http://18.178.247.148:5000/sensorData', json={"device":f"{user}", "judge":judge, "spo2": spo2_buf, "hr": hr_buf})
