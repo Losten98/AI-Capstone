@@ -29,26 +29,30 @@ json_swap ={}
 
 device_db = {
     "titan":"ready",
-    "test11":"ready",
-    "test22":"ready",
+    "yjw0131":"ready",
+    "juhyeong":"ready",
+    "dlwlsdn0312":"ready",
 }
 
 time_db = {
     "titan":[],
-    "test11":[],
-    "test22":[],
+    "yjw0131":[],
+    "juhyeong":[],
+    "dlwlsdn0312":[],
 }
 
 sensor_db = {
     "titan":[],
-    "test11":[],
-    "test22":[],
+    "yjw0131":[],
+    "juhyeong":[],
+    "dlwlsdn0312":[],
 }
 
 judge_db = {
     "titan":[],
-    "test11":[],
-    "test22":[],
+    "yjw0131":[],
+    "juhyeong":[],
+    "dlwlsdn0312":[],
 }
 
 # Todo: route '/' is failed due to reset api feature.
