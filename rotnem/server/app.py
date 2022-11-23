@@ -6,6 +6,7 @@ from flask import jsonify
 #from auth import SHA256
 import sys
 import os
+import json
 import datetime
 
 import numpy as np
@@ -104,11 +105,14 @@ def dataRcv():
 def dataResult():
     global device_db
     session_user = session['user']
+    print(time_db[session_user])
+    dataIndex = f"{session_user}_{time_db[session_user][-1][1]}"
     print('app user ' + session_user)
     mainData = {
         'user': session_user,
         'sensorData': sensor_db[session_user][-1],
         'judge' : judge_db[session_user][-1],
+        'data_index': dataIndex,
     }
     return render_template('data_result.html',data = mainData)
 
@@ -124,13 +128,15 @@ def dataShow(device_name, id):
                 'user': device_name,
                 'sensorData': "No data recorded.",
             }
-            return render_template('data_show.html',data = mainData)
+            return render_template('error.html',error = 'No data recorded.')
         if device_name in device_db:
             print('data show device name: ' + device_name)
+            dataIndex = f"{session_user}_{time_db[session_user][int(id)][1]}"
             mainData = {
                 'user': device_name,
                 'sensorData': sensor_db[device_name][int(id)],
                 'judge' : judge_db[session_user][int(id)],
+                'data_index': dataIndex,
             }
             return render_template('data_show.html',data = mainData)
         else:
@@ -170,19 +176,35 @@ def dbcheck():
 @app.route('/sensorData', methods=['POST'])
 def sensorDataRcv():
     global sensor_db
+    data_set = [["level", "channel_name", "index"]]
+    sampling_unit_time = 8 # 1 spo2 sampling period ex. 8 = 8 sec
     try:
         print(f"receive json ? {request.is_json}")
         if request.is_json:
             now = datetime.datetime.now()
-            now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+            time_stamp = now.strftime("%Y%m%d_%H%M%S")
             data = request.get_json()
             device = data['device']
             judge = data['judge']
             print('device name:', device)
             sensor_db[device].append([data['spo2'], data['hr']])
             judge_db[device].append(judge)
-            time_db[device].append([len(time_db[device]),now_str])
+            time_db[device].append([len(time_db[device]),time_stamp])
             print(time_db[device][-1], sensor_db[device][-1])
+            for i in range(len(data['spo2'])//2):
+                index_time = now - datetime.timedelta(seconds=((sampling_unit_time * len(data['spo2'])//2 - i*sampling_unit_time)))
+                #print(data['spo2'][i], data['hr'][i], data['spo2'][len(data['spo2'])//2 + i], data['hr'][len(data['spo2'])//2 + i])
+                data_set.append([data['spo2'][i], 'spo2_ch1',index_time.strftime("%Y-%m-%d %H:%M:%S")])
+                data_set.append([data['hr'][i], 'hr_ch1',index_time.strftime("%Y-%m-%d %H:%M:%S")])
+                data_set.append([data['spo2'][len(data['spo2'])//2 + i], 'spo2_ch2',index_time.strftime("%Y-%m-%d %H:%M:%S")])
+                data_set.append([data['hr'][len(data['spo2'])//2 + i], 'hr_ch2',index_time.strftime("%Y-%m-%d %H:%M:%S")])
+            #print(data_set)
+            save_json_to_static = os.getcwd() + f"/static/json/{device}_{time_stamp}.json"
+            save_text = json.dumps(data_set)
+            with open(save_json_to_static, "w") as f:
+                 f.write(save_text)
+                 f.close()
+                 print("Success data set file save to ", save_json_to_static)
             return ok
         else:
             print('data type is not json.')

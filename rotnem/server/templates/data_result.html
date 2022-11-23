@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block body %}
+
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
   <div class="container">
     <div class="row justify-content-center mt-5">
       <div class="col-lg-8">
@@ -13,32 +15,131 @@
             <img class="card-img" src="/static/images/project_h_base.png" alt="Card image">
             <div class="card-img-overlay">
               <br></dr><br></dr><br></dr><br></dr>
-              <h5 class="card-text ml-5">Welcome {{data.user}}. Enjoy your brain.</h5>
-              <br></dr><br></dr><br></dr><br></dr>
-
               <div>
-                <h1>fNIRS result show now.</h1>
-                <br></dr><br></dr>
                 <div id="container">
                   <div id="main">
                     <div id="main-title">
-                      <h3>User Name: {{data.user}}</h3><br></br>
-                      <h1>Your Brain: {{data.judge}}</h1>
-
-                      <h5>Data : {{data.sensorData}}</h5>
-
+                      <h1 style="color:grey;">{{data.user}} Your Brain:</h1><h1> {{data.judge}}</h1>
+                      <p class="small" style="color:grey;">Judged by Scikit-learn Machine Learning</p>
+                        <h6 style="color:grey;">Data index: {{data.data_index}}</h6>
+                        <canvas id="spo2_graph" class="chart ml-5" width="700" height="400"></canvas>
+                        <br><a href="/userMain">Back to Main</a><br></br>
                     </div>
                   </div>
                 </div>
               </div>
-              <a href="/userMain">Back to Main</a>
-              <br></dr><br></dr><br></dr>
-              <br></dr><br></dr><br></dr><br></dr><br></dr><br></dr>
-            <p class="small">Copy right. All right reseved.</p></a>
-            <a href="/logout">Logout</a>
+             <p class="small">Copy right. All right reseved.  <a href="/logout">Logout</a></p>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
+  <script type="text/javascript">
+    var dom = document.getElementById('spo2_graph');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    var ROOT_PATH = '/';
+    var option;
+    console.log("{{data.data_index}}.json");
+    var json_file = "/static/json/{{data.data_index}}.json";
+    $.get(
+      json_file,
+      function (_rawData) {
+        run(_rawData);
+      }
+    );
+function run(_rawData) {
+  const categories = [
+    'spo2_ch1',
+    'hr_ch1',
+    'spo2_ch2',
+    'hr_ch2',
+  ];
+  const datasetWithFilters = [];
+  const seriesList = [];
+  echarts.util.each(categories, function (category) {
+    var datasetId = 'dataset_' + category;
+    datasetWithFilters.push({
+      id: datasetId,
+      fromDatasetId: 'dataset_raw',
+      transform: {
+        type: 'filter',
+        config: {
+          and: [
+            { dimension: 'level', gte: 60 },
+            { dimension: 'channel_name', '=': category }
+          ]
+        }
+      }
+    });
+    seriesList.push({
+      type: 'line',
+      datasetId: datasetId,
+      showSymbol: false,
+      name: category,
+      endLabel: {
+        show: true,
+        formatter: function (params) {
+          return params.value[1] + ': ' + params.value[0];
+        }
+      },
+      labelLayout: {
+        moveOverlap: 'shiftY'
+      },
+      emphasis: {
+        focus: 'series'
+      },
+      encode: {
+        x: 'index',
+        y: 'Spo2',
+        label: ['Category', 'SPO2'],
+        itemName: 'Index',
+        tooltip: ['SPO2']
+      }
+    });
+  });
+  option = {
+    animationDuration: 8000,
+    dataset: [
+      {
+        id: 'dataset_raw',
+        source: _rawData
+      },
+      ...datasetWithFilters
+    ],
+    title: {
+      text: 'SPO2 and HR'
+    },
+    tooltip: {
+      order: 'valueDesc',
+      trigger: 'axis'
+    },
+    xAxis: {
+      type: 'category',
+      nameLocation: 'middle'
+    },
+    yAxis: {
+      name: 'level',
+      min: 60
+    },
+    grid: {
+      right: 120
+    },
+    series: seriesList
+  };
+  myChart.setOption(option);
+}
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+
 {% endblock %}
