@@ -7,6 +7,8 @@ import os
 
 import multi_max30102
 
+import joblib
+
 s1 = multi_max30102.MAX30102_1()
 s2 = multi_max30102.MAX30102_2()
 
