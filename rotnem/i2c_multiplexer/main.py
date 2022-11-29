@@ -118,6 +118,12 @@ while True:
         print(len(ir))
         for i in range(50):
             hr,hr_valid,spo2,spo2_valid = hrcalc.calc_hr_and_spo2(ir[100*i:100*i+100], red[100*i:100*i+100])
+
+            if hr < 0:
+                hr = 60
+            if spo2 < 0:
+                spo2 = 60
+
             hr_buf.append(hr)
             spo2_buf.append(spo2)
 
